@@ -14,17 +14,22 @@
     </div>
     <script>
         const messages = [
-            "Your socks are almost matching today!",
-            "You're as coordinated as a baby giraffe!",
-            "Your dance moves scare pigeons away!",
-            "You look like you had breakfast today... maybe!",
-            "You're as organized as my room... wait..."
+            //"You've got the charisma of a wet sock.",
+            //"I am in your walls.",
+            //"They say the definition of insanity is doing the same thing over and over again and expecting different results. Skibidi Ohio or something.",
+            //"Crazy? I was crazy once. They put me in a room. A rubber room. A rubber room with rats. Crazy? I was crazy once. They put me in a room. A rubber room. A rubber room with rats. Crazy? I was crazy once. They put me in a room. A rubber room. A rubber room with rats. Crazy? I was crazy once. They put me in a room. A rubber room. A rubber room with rats. Crazy? I was crazy once. They put me in a room. A rubber room. A rubber room with rats.",
+            //"AHHHHHHH! <-- I am inside your head.",
+            //"Can't stop the signal.",
+            //"You look like you had breakfast today... maybe!",
+            //"You're the reason the gene pool needs a lifeguard!",
+            //"There is a thousand ways to skin a cat, but only one way to make a cat skin suit.",
+            "<img src='images/hatsune-miku-dance.gif' alt='Hatsune Miku dancing' style='width: 300px;'>",
         ];
 
         function generateMessage() {
             const messageElement = document.getElementById('funMessage');
             const randomIndex = Math.floor(Math.random() * messages.length);
-            messageElement.textContent = messages[randomIndex];
+            messageElement.innerHTML = messages[randomIndex];
         }
     </script>
 </body>
