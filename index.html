@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wheatlythe2nd</title>
+    <title>Wheatly</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,7 +13,7 @@
             <input type="password" id="password" placeholder="Password" class="login-input">
             <button id="loginBtn" onclick="handleLogin()">Login</button>
         </div>
-        <h1>Welcome to my website.</h1>
+        <h1>Wheatly</h1>
         <nav>
             <ul>
                 <li><a href="#home">Home</a></li>
@@ -63,6 +63,16 @@
 
     <script>
         function handleLogin() {
+            // Check if already logged in
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                // Handle logout
+                localStorage.removeItem('isLoggedIn');
+                document.getElementById('loginBtn').textContent = 'Login';
+                alert('Logged out successfully!');
+                return;
+            }
+
+            // Handle login
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
