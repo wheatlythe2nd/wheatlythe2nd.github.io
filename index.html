@@ -8,6 +8,11 @@
 </head>
 <body>
     <header>
+        <div class="login-form">
+            <input type="text" id="username" placeholder="Username" class="login-input">
+            <input type="password" id="password" placeholder="Password" class="login-input">
+            <button id="loginBtn" onclick="handleLogin()">Login</button>
+        </div>
         <h1>Welcome to my website.</h1>
         <nav>
             <ul>
@@ -23,7 +28,7 @@
     <main>
         <section id="home">
             <h2>Home</h2>
-            <p>Welcome to my first website! Here you'll find information about me and my projects.</p>
+            <p>Welcome to my website! Here you'll find information about me and my projects.</p>
         </section>
 
         <section id="about">
@@ -55,5 +60,25 @@
     <footer>
         <p>&copy; 2024 Wheatlythe2nd. All rights reserved.</p>
     </footer>
+
+    <script>
+        function handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === "Wheatly" && password === "1234") {
+                localStorage.setItem('isLoggedIn', 'true');
+                document.getElementById('loginBtn').textContent = 'Logout';
+                alert('Logged in successfully!');
+            } else {
+                alert('Invalid credentials!');
+            }
+        }
+
+        // Check login status on page load
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            document.getElementById('loginBtn').textContent = 'Logout';
+        }
+    </script>
 </body>
 </html>
