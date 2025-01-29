@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <header>
+        <div class="login-form">
+            <input type="text" id="username" placeholder="Username" class="login-input">
+            <input type="password" id="password" placeholder="Password" class="login-input">
+            <button id="loginBtn" onclick="handleLogin()">Login</button>
+        </div>
+    </header>
+
     <div class="fun-container">
         <h1 id="funMessage">Click for a silly message!</h1>
         <button onclick="generateMessage()" class="fun-button">Get Message</button>
@@ -95,10 +103,55 @@
             showPendingSubmissions();
         }
 
-        // Check if user is logged in and show admin section
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hash))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        async function handleLogin() {
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('passwordHash');
+                document.getElementById('loginBtn').textContent = 'Login';
+                document.getElementById('adminSection').style.display = 'none';
+                alert('Logged out successfully!');
+                return;
+            }
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const hashedPassword = await hashPassword(password);
+            
+            const storedHash = localStorage.getItem('passwordHash');
+            
+            if (!storedHash) {
+                if (username === "Wheatly") {
+                    localStorage.setItem('passwordHash', hashedPassword);
+                    localStorage.setItem('isLoggedIn', 'true');
+                    document.getElementById('loginBtn').textContent = 'Logout';
+                    document.getElementById('adminSection').style.display = 'block';
+                    alert('Password set and logged in successfully!');
+                }
+            } else {
+                if (username === "Wheatly" && hashedPassword === storedHash) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    document.getElementById('loginBtn').textContent = 'Logout';
+                    document.getElementById('adminSection').style.display = 'block';
+                    alert('Logged in successfully!');
+                } else {
+                    alert('Invalid credentials!');
+                }
+            }
+        }
+
+        // Check login status on page load
         if (localStorage.getItem('isLoggedIn') === 'true') {
+            document.getElementById('loginBtn').textContent = 'Logout';
             document.getElementById('adminSection').style.display = 'block';
-            showPendingSubmissions();
         }
     </script>
 
