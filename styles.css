@@ -156,3 +156,39 @@ footer {
         font-size: 1.5rem;
     }
 }
+
+.fun-link {
+    color: #ff69b4;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.fun-link:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s;
+}
+
+.fun-container {
+    text-align: center;
+    padding: 50px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.fun-button {
+    padding: 15px 30px;
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin: 20px;
+}
+
+.back-button {
+    display: block;
+    margin-top: 20px;
+    color: #333;
+    text-decoration: none;
+}

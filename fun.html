@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Zone!</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="fun-container">
+        <h1 id="funMessage">Click for a silly message!</h1>
+        <button onclick="generateMessage()" class="fun-button">Get Message</button>
+        <a href="index.html" class="back-button">Back to Home</a>
+    </div>
+    <script>
+        const messages = [
+            "Your socks are almost matching today!",
+            "You're as coordinated as a baby giraffe!",
+            "Your dance moves scare pigeons away!",
+            "You look like you had breakfast today... maybe!",
+            "You're as organized as my room... wait..."
+        ];
+
+        function generateMessage() {
+            const messageElement = document.getElementById('funMessage');
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            messageElement.textContent = messages[randomIndex];
+        }
+    </script>
+</body>
+</html>
