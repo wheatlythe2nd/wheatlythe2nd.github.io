@@ -73,13 +73,19 @@
             const pendingDiv = document.getElementById('pendingSubmissions');
             const pending = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
             
-            pendingDiv.innerHTML = pending.map((submission, index) => `
-                <div class="submission-item">
-                    <p>${submission}</p>
-                    <button onclick="approveSubmission(${index})">Approve</button>
-                    <button onclick="rejectSubmission(${index})">Reject</button>
-                </div>
-            `).join('');
+            pendingDiv.innerHTML = pending.length === 0 ? '<p>No pending submissions</p>' : 
+                pending.map((submission, index) => `
+                    <div class="submission-item">
+                        <p>${submission}</p>
+                        <button onclick="approveSubmission(${index})">Approve</button>
+                        <button onclick="rejectSubmission(${index})">Reject</button>
+                    </div>
+                `).join('');
+        }
+
+        function loadApprovedMessages() {
+            const approved = JSON.parse(localStorage.getItem('suggestions') || '[]');
+            messages.push(...approved);
         }
 
         function approveSubmission(index) {
@@ -103,19 +109,9 @@
             showPendingSubmissions();
         }
 
-        async function hashPassword(password) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(password);
-            const hash = await crypto.subtle.digest('SHA-256', data);
-            return Array.from(new Uint8Array(hash))
-                .map(b => b.toString(16).padStart(2, '0'))
-                .join('');
-        }
-
-        async function handleLogin() {
+        function handleLogin() {
             if (localStorage.getItem('isLoggedIn') === 'true') {
                 localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('passwordHash');
                 document.getElementById('loginBtn').textContent = 'Login';
                 document.getElementById('adminSection').style.display = 'none';
                 alert('Logged out successfully!');
@@ -124,35 +120,26 @@
 
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const hashedPassword = await hashPassword(password);
             
-            const storedHash = localStorage.getItem('passwordHash');
-            
-            if (!storedHash) {
-                if (username === "Wheatly") {
-                    localStorage.setItem('passwordHash', hashedPassword);
-                    localStorage.setItem('isLoggedIn', 'true');
-                    document.getElementById('loginBtn').textContent = 'Logout';
-                    document.getElementById('adminSection').style.display = 'block';
-                    alert('Password set and logged in successfully!');
-                }
+            if (username === "Wheatly" && password === "1234") {
+                localStorage.setItem('isLoggedIn', 'true');
+                document.getElementById('loginBtn').textContent = 'Logout';
+                document.getElementById('adminSection').style.display = 'block';
+                alert('Logged in successfully!');
             } else {
-                if (username === "Wheatly" && hashedPassword === storedHash) {
-                    localStorage.setItem('isLoggedIn', 'true');
-                    document.getElementById('loginBtn').textContent = 'Logout';
-                    document.getElementById('adminSection').style.display = 'block';
-                    alert('Logged in successfully!');
-                } else {
-                    alert('Invalid credentials!');
-                }
+                alert('Invalid credentials!');
             }
         }
 
         // Check login status on page load
-        if (localStorage.getItem('isLoggedIn') === 'true') {
-            document.getElementById('loginBtn').textContent = 'Logout';
-            document.getElementById('adminSection').style.display = 'block';
-        }
+        window.onload = function() {
+            loadApprovedMessages();
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                document.getElementById('loginBtn').textContent = 'Logout';
+                document.getElementById('adminSection').style.display = 'block';
+                showPendingSubmissions();
+            }
+        };
     </script>
 
 </body>
