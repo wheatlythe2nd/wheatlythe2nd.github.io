@@ -11,6 +11,17 @@
         <h1 id="funMessage">Click for a silly message!</h1>
         <button onclick="generateMessage()" class="fun-button">Get Message</button>
         <a href="index.html" class="back-button">Back to Home</a>
+        <div class="suggestion-form">
+            <h2>Got something silly to add?</h2>
+            <form id="suggestionForm" onsubmit="handleSuggestion(event)">
+                <textarea id="newMessage" placeholder="Type your silly message here..." required></textarea>
+                <button type="submit">Submit Suggestion</button>
+            </form>
+        </div>
+        <div id="adminSection" style="display: none;" class="admin-section">
+            <h2>Review Submissions</h2>
+            <div id="pendingSubmissions"></div>
+        </div>
     </div>
     <script>
         const messages = [
@@ -26,11 +37,70 @@
             "<img src='images/hatsune-miku-dance.gif' alt='Hatsune Miku dancing' style='width: 300px;'><br><span style='color: cyan;'>Miku Miku ooo ee ooo!</span>",
         ];
 
+        // Load stored suggestions
+        const storedSuggestions = JSON.parse(localStorage.getItem('suggestions') || '[]');
+        messages.push(...storedSuggestions);
+
         function generateMessage() {
             const messageElement = document.getElementById('funMessage');
             const randomIndex = Math.floor(Math.random() * messages.length);
             messageElement.innerHTML = messages[randomIndex];
         }
+
+        function handleSuggestion(event) {
+            event.preventDefault();
+            const newMessage = document.getElementById('newMessage').value;
+            
+            // Store in pending submissions
+            const pendingSubmissions = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
+            pendingSubmissions.push(newMessage);
+            localStorage.setItem('pendingSubmissions', JSON.stringify(pendingSubmissions));
+            
+            // Clear form
+            document.getElementById('suggestionForm').reset();
+            alert('Thanks for your suggestion! It will be reviewed.');
+        }
+
+        function showPendingSubmissions() {
+            const pendingDiv = document.getElementById('pendingSubmissions');
+            const pending = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
+            
+            pendingDiv.innerHTML = pending.map((submission, index) => `
+                <div class="submission-item">
+                    <p>${submission}</p>
+                    <button onclick="approveSubmission(${index})">Approve</button>
+                    <button onclick="rejectSubmission(${index})">Reject</button>
+                </div>
+            `).join('');
+        }
+
+        function approveSubmission(index) {
+            const pending = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
+            const approved = JSON.parse(localStorage.getItem('suggestions') || '[]');
+            
+            // Move from pending to approved
+            const submission = pending.splice(index, 1)[0];
+            approved.push(submission);
+            
+            localStorage.setItem('pendingSubmissions', JSON.stringify(pending));
+            localStorage.setItem('suggestions', JSON.stringify(approved));
+            
+            showPendingSubmissions();
+        }
+
+        function rejectSubmission(index) {
+            const pending = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
+            pending.splice(index, 1);
+            localStorage.setItem('pendingSubmissions', JSON.stringify(pending));
+            showPendingSubmissions();
+        }
+
+        // Check if user is logged in and show admin section
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            document.getElementById('adminSection').style.display = 'block';
+            showPendingSubmissions();
+        }
     </script>
+
 </body>
 </html>
